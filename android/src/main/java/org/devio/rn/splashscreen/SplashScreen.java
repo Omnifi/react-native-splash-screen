@@ -1,8 +1,15 @@
 package org.devio.rn.splashscreen;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Build;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.lang.ref.WeakReference;
 
@@ -28,9 +35,17 @@ public class SplashScreen {
             @Override
             public void run() {
                 if (!activity.isFinishing()) {
+                    View launchScreen =  activity.getLayoutInflater().inflate(R.layout.launch_screen, null);
                     mSplashDialog = new Dialog(activity, themeResId);
-                    mSplashDialog.setContentView(R.layout.launch_screen);
+                    mSplashDialog.setContentView(launchScreen);
                     mSplashDialog.setCancelable(false);
+
+                    ImageView icon = launchScreen.findViewById(R.id.splash_icon);
+                    ObjectAnimator rotate = ObjectAnimator.ofFloat(icon, "rotation", 0f, 180f);
+                    rotate.setDuration(1500);
+                    rotate.setRepeatCount(Animation.INFINITE);
+                    rotate.setInterpolator(new LinearInterpolator());
+                    rotate.start();
 
                     if (!mSplashDialog.isShowing()) {
                         mSplashDialog.show();
